@@ -1,0 +1,8 @@
+model TicketTier {
+  id        Int   @id @default(autoincrement())
+  title     String @unique @db.VarChar(100)
+  service_fee Decimal @db.Decimal(10, 2)
+  buyer_price Decimal @db.Decimal(10, 2)
+  promoter_receives_rice Decimal @db.Decimal(10, 2)
+  @@map("ticket_tiers")
+}
