@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateSettingsDto } from './admin.dto';
-import { settings } from '.prisma/client';
+import { Settings } from '.prisma/client';
 import { SETTING_KEY } from './enums';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class AdminService {
 
   public updateSettings(
     updateSettingsDto: UpdateSettingsDto,
-  ): Promise<settings> {
+  ): Promise<Settings> {
     return this.prisma.settings.upsert({
       where: { key: updateSettingsDto.key },
       create: {

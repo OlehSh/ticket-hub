@@ -3,6 +3,7 @@ import { TicketTireService } from './ticket-tire.service';
 import { TicketTier } from '@prisma/client';
 import { TicketTireDto } from './ticketTire.dto';
 
+//TODO add guards to validate access only for admins or promoters
 @Controller('ticket-tire')
 export class TicketTireController {
   constructor(private ticketTireService: TicketTireService) {
