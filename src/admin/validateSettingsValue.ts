@@ -6,11 +6,17 @@ import {
   ValidationArguments,
 } from 'class-validator';
 import { SETTING_KEY } from './enums';
+
 const errorMessages = {
-  [SETTING_KEY.SERVICE_FEE_RATE]: 'Service fee rate should be between 0 and 100',
+  [SETTING_KEY.SERVICE_FEE_RATE]:
+    'Service fee rate should be between 0 and 100',
   [SETTING_KEY.MINIMUM_FEE]: 'Minimum fee should be between 0 and 50',
-}
-export function ValidateSettingsValue(property: string, options?: ValidationOptions) {
+};
+
+export function ValidateSettingsValue(
+  property: string,
+  options?: ValidationOptions,
+) {
   return (object: any, propertyName: string) => {
     registerDecorator({
       target: object.constructor,

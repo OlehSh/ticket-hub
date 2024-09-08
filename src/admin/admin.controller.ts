@@ -8,7 +8,9 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @Post('/settings')
-  updateSettings(@Body() updateSettingsDto: UpdateSettingsDto): Promise<settings> {
+  updateSettings(
+    @Body() updateSettingsDto: UpdateSettingsDto,
+  ): Promise<settings> {
     return this.adminService.updateSettings(updateSettingsDto);
   }
 }

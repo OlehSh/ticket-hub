@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { TicketTier } from '@prisma/client';
 import { TicketTireDto } from './ticketTire.dto';
-import { settings } from '.prisma/client';
 
 @Injectable()
 export class TicketTireService {
@@ -14,19 +13,17 @@ export class TicketTireService {
 
   private calculateBuyerPrice(
     promoterReceivesPrice: number,
-    serviceFeeRate: settings,
-    minimumFee: settings,
+    serviceFeeRate: number,
+    minimumFee: number,
   ): {
     buyer_price: number;
     promoter_receives_price: number;
     service_fee: number;
   } {
-    let serviceFee: number =
-      (serviceFeeRate.percentage_value * promoterReceivesPrice) /
-      (100 - serviceFeeRate.percentage_value);
-    if (serviceFee < Number(minimumFee.numeric_value)) {
-      serviceFee = Number(minimumFee.numeric_value);
-    }
+    const serviceFee: number = Math.max(
+      (serviceFeeRate * promoterReceivesPrice) / (100 - serviceFeeRate),
+      minimumFee,
+    );
     return {
       buyer_price: promoterReceivesPrice + serviceFee,
       service_fee: serviceFee,
@@ -36,22 +33,22 @@ export class TicketTireService {
 
   private calculatePromoterReceivesPrice(
     buyerPrice: number,
-    serviceFeeRate: settings,
-    minimumFee: settings,
+    serviceFeeRatePercentage: number,
+    minimumFee: number,
   ): {
     buyer_price: number;
     promoter_receives_price: number;
     service_fee: number;
   } {
-    const serviceFee: number =
-      (buyerPrice * serviceFeeRate.percentage_value) / 100;
+    const serviceFee: number = Math.max(
+      (buyerPrice * serviceFeeRatePercentage) / 100,
+      minimumFee,
+    );
     return {
       buyer_price: buyerPrice,
-      service_fee:
-        serviceFee > Number(minimumFee.numeric_value)
-          ? serviceFee
-          : Number(minimumFee.numeric_value),
-      promoter_receives_price: buyerPrice - serviceFee,
+      service_fee: serviceFee,
+      promoter_receives_price:
+        buyerPrice === 0 ? buyerPrice : buyerPrice - serviceFee,
     };
   }
 
@@ -76,15 +73,15 @@ export class TicketTireService {
     if (data.buyer_price >= 0) {
       return this.calculatePromoterReceivesPrice(
         data.buyer_price,
-        serviceFeeRate,
-        minimumFee,
+        serviceFeeRate.percentage_value,
+        Number(minimumFee.numeric_value),
       );
     }
     if (data.promoter_receives_price >= 0) {
       return this.calculateBuyerPrice(
         data.promoter_receives_price,
-        serviceFeeRate,
-        minimumFee,
+        serviceFeeRate.percentage_value,
+        Number(minimumFee.numeric_value),
       );
     }
   }

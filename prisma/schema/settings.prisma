@@ -1,6 +1,7 @@
-model settings {
+model Settings {
   id                  Int   @id @default(autoincrement())
   key                 String @unique @db.VarChar(100)
   numeric_value       Decimal? @db.Decimal(10, 2)
   percentage_value    Int? @db.Integer @default(0)
+  @@map("settings")
 }
