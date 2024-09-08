@@ -7,6 +7,21 @@
 ```bash
 $ npm install
 ```
+create `.env` file from .env.example and fill it with your data
+## Setup database
+Before nex step please install docker and docker compose
+```bash
+npm run docker:run-db
+````
+## Run migrations
+```bash
+npm run prisma:migration:run
+```
+
+## Run seed
+```bash
+npm run prisma:seed
+```
 
 ## Compile and run the project
 
